@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Daily Desk — a student digital newsroom demo covering national, international, politics, business, technology, sports and more.">
+  <title>The Daily Desk | Digital Newsroom</title>
+  <style>
+    :root {
+      --navy:#10243a; --navy-2:#183852; --red:#c62835; --ink:#172333;
+      --muted:#687586; --paper:#fff; --bg:#f1f3f6; --line:#e2e6eb;
+      --gold:#e8b84a; --shadow:0 12px 30px rgba(16,36,58,.09);
+      --serif:Georgia,"Times New Roman",serif;
+      --sans:Arial,Helvetica,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:100px}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .container{width:min(1180px,92%);margin:auto}
+    .topline{background:var(--navy);color:#dbe4ee;font-size:.78rem}
+    .topline .container{display:flex;justify-content:space-between;gap:15px;padding:7px 0}
+    .masthead{background:#fff;border-bottom:1px solid var(--line)}
+    .masthead-inner{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:20px 0}
+    .brand{display:flex;align-items:center;gap:13px;min-width:230px}
+    .brand-mark{width:48px;height:48px;background:var(--red);color:white;display:grid;place-items:center;font-family:var(--serif);font-weight:bold;font-size:1.7rem}
+    .brand-name{font-family:var(--serif);font-weight:900;font-size:clamp(1.45rem,3vw,2.15rem);letter-spacing:-1px;line-height:1}
+    .brand-tag{font-size:.7rem;letter-spacing:2.3px;color:var(--muted);text-transform:uppercase;margin-top:5px}
+    .search-wrap{display:flex;max-width:390px;width:100%;border:1px solid #d5dce4;border-radius:3px;overflow:hidden;background:#fff}
+    .search-wrap input{width:100%;border:0;outline:0;padding:11px 13px;color:var(--ink)}
+    .search-wrap button{border:0;background:var(--navy);color:#fff;padding:0 17px;font-size:1.1rem}
+    .nav{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 4px 12px #10243a20}
+    .nav-inner{display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:thin}
+    .nav a{white-space:nowrap;padding:13px 13px;font-size:.79rem;font-weight:700;text-transform:uppercase;letter-spacing:.35px;border-bottom:3px solid transparent}
+    .nav a:hover,.nav a.active{background:#ffffff12;border-bottom-color:var(--gold)}
+    .breaking{background:#fff;border-bottom:1px solid var(--line)}
+    .breaking-inner{display:flex;align-items:center;gap:0;min-height:44px;overflow:hidden}
+    .breaking-label{background:var(--red);color:white;font-size:.73rem;font-weight:800;letter-spacing:.8px;padding:12px 15px;white-space:nowrap}
+    .ticker-window{overflow:hidden;flex:1}
+    .ticker-track{display:flex;gap:38px;white-space:nowrap;padding-left:22px;animation:ticker 32s linear infinite;font-size:.83rem;font-weight:700}
+    .ticker-track span:before{content:"◆";color:var(--red);font-size:.65rem;margin-right:10px}
+    .ticker-window:hover .ticker-track{animation-play-state:paused}
+    @keyframes ticker{to{transform:translateX(-50%)}}
+    main{padding:28px 0 55px}
+    .section{margin:0 0 38px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;border-bottom:2px solid var(--navy);margin-bottom:17px;padding-bottom:9px}
+    .section-head h2{font-family:var(--serif);font-size:1.55rem;margin:0;color:var(--navy);line-height:1.2}
+    .section-head small{color:var(--muted);font-size:.76rem}
+    .eyebrow{color:var(--red);font-size:.7rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
+    .hero-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:18px}
+    .hero-main,.hero-side-card{position:relative;overflow:hidden;background:var(--navy);color:#fff;min-height:330px}
+    .hero-main img,.hero-side-card img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:.72;transition:transform .5s}
+    .hero-main:hover img,.hero-side-card:hover img{transform:scale(1.04)}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,20,34,.94),rgba(7,20,34,.02) 78%);display:flex;flex-direction:column;justify-content:end;padding:26px}
+    .hero-overlay h1{font: bold clamp(1.7rem,3.2vw,2.65rem)/1.12 var(--serif);margin:8px 0}
+    .hero-overlay p{max-width:650px;margin:0 0 12px;color:#e8edf3}
+    .hero-side{display:grid;grid-template-rows:1fr 1fr;gap:18px}
+    .hero-side-card{min-height:156px}
+    .hero-side-card .hero-overlay{padding:17px}
+    .hero-side-card h3{font: bold 1.25rem/1.18 var(--serif);margin:6px 0}
+    .tag{display:inline-block;background:var(--red);color:#fff;font-size:.65rem;font-weight:800;letter-spacing:.7px;text-transform:uppercase;padding:4px 8px;width:max-content}
+    .meta{font-size:.72rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:10px}
+    .hero-overlay .meta{color:#d2dce6}
+    .read-link{display:inline-block;color:var(--red);font-weight:800;font-size:.78rem;margin-top:8px}
+    .hero-overlay .read-link{color:#fff;border-bottom:1px solid var(--gold);padding-bottom:2px}
+    .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}
+    .news-card{background:#fff;border:1px solid var(--line);min-width:0;box-shadow:0 3px 12px rgba(16,36,58,.025);transition:transform .2s,box-shadow .2s}
+    .news-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+    .card-image{height:155px;overflow:hidden;background:#dce3e9;position:relative}
+    .card-image img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .news-card:hover .card-image img{transform:scale(1.05)}
+    .card-body{padding:14px}
+    .card-body h3{font: bold 1.12rem/1.25 var(--serif);margin:8px 0;color:var(--navy)}
+    .card-body p{font-size:.84rem;color:#566273;margin:0 0 10px}
+    .card-body .meta{margin-top:9px}
+    .card-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px}
+    .btn{display:inline-block;border:0;background:var(--red);color:#fff;padding:9px 13px;font-size:.76rem;font-weight:800;border-radius:2px}
+    .btn:hover{background:#a91e2a}
+    .btn-outline{background:transparent;border:1px solid var(--navy);color:var(--navy)}
+    .btn-outline:hover{background:var(--navy);color:#fff}
+    .latest-layout{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+    .latest-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .sidebar-box{background:#fff;border:1px solid var(--line);padding:18px;margin-bottom:16px}
+    .sidebar-box h3{font: bold 1.2rem var(--serif);color:var(--navy);margin:0 0 12px;border-bottom:1px solid var(--line);padding-bottom:9px}
+    .rank-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+    .rank-item:last-child{border:0}
+    .rank{font: bold 1.5rem var(--serif);color:var(--red)}
+    .rank-item strong{font: bold .93rem/1.25 var(--serif);display:block}
+    .rank-item small{color:var(--muted);font-size:.7rem}
+    .category-section{scroll-margin-top:95px}
+    .category-section .card-grid{grid-template-columns:repeat(3,1fr)}
+    .demo-note{background:#fff8e7;border:1px solid #f0d99e;color:#654d17;padding:12px 15px;font-size:.8rem;margin-bottom:22px}
+    .demo-note strong{color:#4e390c}
+    .empty-state{grid-column:1/-1;background:#fff;padding:30px;text-align:center;color:var(--muted);border:1px dashed #cbd3dc}
+    #articleView{display:none;background:#fff;padding:28px 0 55px;min-height:65vh}
+    .article-wrap{max-width:850px;margin:auto}
+    .article-back{margin-bottom:20px}
+    .article-title{font: bold clamp(2rem,4vw,3.2rem)/1.12 var(--serif);color:var(--navy);margin:10px 0}
+    .article-deck{font-size:1.12rem;color:#536171;margin:0 0 17px}
+    .article-hero{width:100%;max-height:470px;object-fit:cover;margin:18px 0 5px}
+    .image-credit{font-size:.68rem;color:var(--muted);margin-bottom:20px}
+    .article-content{font:1.05rem/1.85 Georgia,serif;color:#293747}
+    .article-content p{margin:0 0 17px}
+    .info-panel{background:#f4f6f8;border-left:4px solid var(--red);padding:17px 20px;margin:24px 0}
+    .info-panel h3{font: bold 1.25rem var(--serif);margin:0 0 10px;color:var(--navy)}
+    .info-panel dl{display:grid;grid-template-columns:90px 1fr;gap:7px 12px;margin:0;font-size:.88rem}
+    .info-panel dt{font-weight:800;color:var(--navy)}
+    .info-panel dd{margin:0;color:#4c5968}
+    .source-box{border-top:1px solid var(--line);padding-top:16px;margin-top:25px;font-size:.84rem}
+    .source-box a{color:var(--red);text-decoration:underline}
+    .related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}
+    .related-item{background:#f4f6f8;padding:12px;font: bold .9rem var(--serif);color:var(--navy);cursor:pointer}
+    .related-item:hover{background:#e8edf2}
+    .footer{background:var(--navy);color:#d9e1e9;padding:38px 0 18px}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}
+    .footer h3{font: bold 1.2rem var(--serif);color:#fff;margin:0 0 12px}
+    .footer p,.footer a{font-size:.82rem;color:#c1ccd7}
+    .footer a{display:block;margin:7px 0}
+    .footer a:hover{color:#fff}
+    .copyright{border-top:1px solid #ffffff25;margin-top:25px;padding-top:15px;text-align:center;font-size:.73rem;color:#aebdca}
+    .mobile-menu{display:none}
+    .hidden{display:none!important}
+    @media(max-width:900px){
+      .card-grid{grid-template-columns:repeat(2,1fr)}
+      .hero-grid{grid-template-columns:1fr}
+      .hero-main{min-height:350px}
+      .hero-side{grid-template-columns:1fr 1fr;grid-template-rows:1fr}
+      .latest-layout{grid-template-columns:1fr}
+      .category-section .card-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:600px){
+      .topline .container{font-size:.68rem}
+      .masthead-inner{align-items:flex-start;flex-direction:column;padding:15px 0;gap:13px}
+      .search-wrap{max-width:none}
+      .nav a{padding:12px 10px;font-size:.7rem}
+      main{padding-top:18px}
+      .hero-main{min-height:370px}
+      .hero-side{grid-template-columns:1fr;grid-template-rows:repeat(2,150px)}
+      .card-grid,.latest-list,.category-section .card-grid{grid-template-columns:1fr}
+      .card-image{height:190px}
+      .section-head h2{font-size:1.35rem}
+      .footer-grid{grid-template-columns:1fr;gap:18px}
+      .related-grid{grid-template-columns:1fr}
+      .info-panel dl{grid-template-columns:75px 1fr}
+      .article-content{font-size:1rem}
+      .breaking-label{padding:12px 9px;font-size:.65rem}
+      .ticker-track{font-size:.75rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="topline">
+    <div class="container"><span>INDEPENDENT STUDENT NEWSROOM · EDITORIAL DEMO</span><span id="todayDate">Loading date…</span></div>
+  </div>
+
+  <header class="masthead">
+    <div class="container masthead-inner">
+      <a class="brand" href="#" id="brandHome" aria-label="The Daily Desk home">
+        <div class="brand-mark">D</div>
+        <div><div class="brand-name">THE DAILY DESK</div><div class="brand-tag">Digital Newsroom · News That Matters</div></div>
+      </a>
+      <form class="search-wrap" id="searchForm" role="search">
+        <input id="searchInput" type="search" placeholder="Search headlines, topics or keywords…" aria-label="Search news">
+        <button type="submit" aria-label="Search">⌕</button>
+      </form>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="container nav-inner" id="navLinks">
+      <a href="#home" class="active">Home</a>
+      <a href="#national">National</a><a href="#international">International</a><a href="#politics">Politics</a>
+      <a href="#business">Business</a><a href="#technology">Technology</a><a href="#sports">Sports</a>
+      <a href="#entertainment">Entertainment</a><a href="#education">Education</a><a href="#science">Science</a>
+      <a href="#environment">Environment</a><a href="#delhi">Delhi</a>
+    </div>
+  </nav>
+
+  <div class="breaking">
+    <div class="container breaking-inner">
+      <div class="breaking-label">NEWS DESK</div>
+      <div class="ticker-window"><div class="ticker-track" id="tickerTrack">
+        <span>Demonstration newsroom: headlines below are illustrative sample stories</span>
+        <span>Verify current developments with the original publisher before reporting</span>
+        <span>Static website · no live news feed is connected</span>
+        <span>Demonstration newsroom: headlines below are illustrative sample stories</span>
+        <span>Verify current developments with the original publisher before reporting</span>
+        <span>Static website · no live news feed is connected</span>
+      </div></div>
+    </div>
+  </div>
+
+  <main id="home">
+    <div class="container">
+      <div class="demo-note"><strong>Editorial transparency:</strong> This is a static student-project demonstration. The sample headlines and article text are fictional examples created to demonstrate layout and 5W1H reporting. They are <strong>not current or verified news</strong>. Replace them with checked reports and original source links before publication.</div>
+
+      <section class="section" aria-labelledby="featuredHeading">
+        <div class="section-head"><h2 id="featuredHeading">Featured Story</h2><small>Editor's spotlight · Sample content</small></div>
+        <div class="hero-grid" id="heroGrid"></div>
+      </section>
+
+      <section class="section" id="topHeadlines">
+        <div class="section-head"><h2>Top Headlines</h2><small>Selected sample stories</small></div>
+        <div class="card-grid" id="topGrid"></div>
+      </section>
+
+      <section class="section" id="latestNews">
+        <div class="section-head"><h2>Latest News</h2><small>Demo newsroom feed · not live</small></div>
+        <div class="latest-layout">
+          <div class="latest-list" id="latestGrid"></div>
+          <aside>
+            <div class="sidebar-box"><h3>Trending Stories</h3><div id="trendingList"></div></div>
+            <div class="sidebar-box"><h3>Editor's Picks</h3><div id="editorsList"></div></div>
+          </aside>
+        </div>
+      </section>
+
+      <div id="categorySections"></div>
+      <section class="section hidden" id="searchResults">
+        <div class="section-head"><h2 id="searchHeading">Search Results</h2><button class="btn btn-outline" id="clearSearch">Clear Search</button></div>
+        <div class="card-grid" id="searchGrid"></div>
+      </section>
+    </div>
+  </main>
+
+  <section id="articleView" aria-live="polite">
+    <div class="container article-wrap" id="articleContent"></div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><h3>THE DAILY DESK</h3><p>A student digital newsroom concept built to present news clearly, responsibly and with context. Our editorial standard is accuracy, attribution and public interest.</p><p><strong>News That Matters.</strong></p></div>
+        <div><h3>Editorial</h3><a href="#editorial" data-info="Editorial Policy">Editorial Policy</a><a href="#factcheck" data-info="Fact-Checking Policy">Fact-Checking Policy</a><a href="#sources" data-info="News Sources">News Sources</a></div>
+        <div><h3>About</h3><a href="#about" data-info="About Us">About Us</a><a href="#contact" data-info="Contact Us">Contact Us</a><a href="#privacy" data-info="Privacy Policy">Privacy Policy</a></div>
+      </div>
+      <div class="copyright">© <span id="year">2026</span> The Daily Desk. All Rights Reserved. · Static educational demo, not a live news service.</div>
+    </div>
+  </footer>
+
+  <script>
+    // SAMPLE DATA ONLY: replace with verified reporting and direct source URLs before publishing.
+    const demoSource = { name: "Source verification required", url: "https://www.reuters.com/" };
+    const categories = [
+      {id:"national", name:"National News"},
+      {id:"international", name:"International News"},
+      {id:"politics", name:"Political News"},
+      {id:"business", name:"Business & Economy"},
+      {id:"technology", name:"Technology News"},
+      {id:"sports", name:"Sports News"},
+      {id:"entertainment", name:"Entertainment News"},
+      {id:"education", name:"Education News"},
+      {id:"science", name:"Health & Science"},
+      {id:"environment", name:"Environment & Climate"},
+      {id:"delhi", name:"Delhi & Local News"}
+    ];
+
+    const articles = [
+      {id:1,cat:"national",title:"Community libraries explore new ways to reach young readers",deck:"A fictional city-level example looks at reading spaces, access and community participation.",img:"https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&q=85",alt:"Rows of books in a library",date:"Sample story · 13 Nov 2026",time:"10:30 AM",location:"Illustrative location, India",author:"The Daily Desk Research Team",top:true,featured:true,
+      paragraphs:["In this illustrative report, community groups are exploring ways to make local libraries more welcoming to young readers. The example focuses on reading clubs, accessible spaces and activities designed around students' interests.","The model library programme described here includes weekend reading sessions, book exchanges and introductory digital-literacy workshops. These details are fictional and are included to demonstrate how a local public-interest story can be structured.","A real report on this subject should speak with library officials, students, parents and local authorities. It should verify programme dates, participation figures, budgets and access arrangements before publication."],
+      wh:{who:"Library organisers and participating readers (illustrative)",what:"A sample community reading initiative",when:"Fictional example dated 13 November 2026",where:"An illustrative Indian city",why:"To demonstrate reporting on access to reading spaces",how:"Through reading clubs, book exchanges and workshops (sample details)"},
+      background:"Libraries can support reading, learning and access to information. Any real coverage should explain the local context and check what services are actually available.",impact:"The issue may matter to students, families, educators and neighbourhood residents.",facts:"No real statistics are supplied in this demo. Verify all figures independently.",quote:"No real quotation is included.",source:demoSource},
+      {id:2,cat:"international",title:"Cities share ideas on preparing for extreme weather",deck:"A sample international explainer about cooperation, preparedness and resilient infrastructure.",img:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=85",alt:"Green forest landscape",date:"Sample story · 13 Nov 2026",time:"09:45 AM",location:"International · illustrative",author:"International Desk",top:true,
+      paragraphs:["This fictional explainer considers how cities in different regions can exchange lessons on preparing for extreme weather. It looks at early warnings, public communication and the protection of essential services.","The example highlights the importance of local planning. A real report would compare official preparedness plans and seek comment from climate researchers, emergency managers and residents.","International comparisons need careful context: geography, public resources and local risks differ. Reporters should avoid suggesting that one policy can be copied everywhere without adaptation."],
+      wh:{who:"City planners and emergency managers (illustrative)",what:"Sharing preparedness practices",when:"Fictional example dated 13 November 2026",where:"Multiple unnamed cities",why:"To reduce risks from extreme weather",how:"Through planning, warnings and knowledge exchange"},
+      background:"Climate adaptation is shaped by local conditions and public infrastructure.",impact:"Preparedness can affect public safety, transport, housing and essential services.",facts:"No verified event, agreement or statistic is asserted.",quote:"No real quotation is included.",source:demoSource},
+      {id:3,cat:"politics",title:"Public consultation model puts local issues on the agenda",deck:"A fictional policy story showing how to explain consultation, representation and accountability.",img:"https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1000&q=85",alt:"Government building exterior",date:"Sample story · 12 Nov 2026",time:"05:20 PM",location:"Illustrative, India",author:"Politics Desk",top:true,
+      paragraphs:["This sample political report examines a hypothetical public consultation process in which residents can share views on neighbourhood priorities.","A complete real-world report would identify the responsible department, the consultation period, the legal or administrative basis and the process through which public submissions will be considered.","It would also include responses from government representatives, opposition voices, civil-society groups and residents, while clearly distinguishing confirmed decisions from proposals."],
+      wh:{who:"Residents and public officials (illustrative)",what:"A hypothetical public consultation",when:"Fictional example dated 12 November 2026",where:"An illustrative local constituency",why:"To gather views on public priorities",how:"Through meetings and written submissions"},
+      background:"Public consultation is one way institutions can gather feedback before or during policy development.",impact:"The process may affect how residents understand and participate in local decisions.",facts:"No real policy announcement is claimed.",quote:"No real quotation is included.",source:demoSource},
+      {id:4,cat:"business",title:"Small businesses assess the shift towards digital payments",deck:"A sample economy feature on convenience, costs, customer habits and digital access.",img:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=85",alt:"Person using a card payment terminal",date:"Sample story · 12 Nov 2026",time:"02:15 PM",location:"India · illustrative",author:"Business Desk",top:true,
+      paragraphs:["This fictional business feature looks at how small shops may evaluate digital payment options. It considers customer convenience, transaction records, connectivity and the costs of operating payment services.","The sample scenario includes a shopkeeper comparing cash and digital transactions. It does not describe a real business or a verified market survey.","A publishable report should check current payment data from authoritative sources and interview business owners across different locations and sectors."],
+      wh:{who:"Small business owners and customers (illustrative)",what:"Use of digital payment options",when:"Fictional example dated 12 November 2026",where:"Illustrative retail settings in India",why:"To understand changing payment preferences",how:"By comparing convenience, costs and access"},
+      background:"Digital payments form part of a wider shift in retail and financial services.",impact:"Payment choices can affect customers, merchants and access to financial services.",facts:"No real adoption rate or financial figure is stated.",quote:"No real quotation is included.",source:demoSource},
+      {id:5,cat:"technology",title:"AI literacy enters the conversation in classrooms",deck:"A sample technology report explores responsible use, digital skills and critical thinking.",img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1000&q=85",alt:"Abstract artificial intelligence visual",date:"Sample story · 13 Nov 2026",time:"08:40 AM",location:"Education technology · illustrative",author:"Technology Desk",top:true,
+      paragraphs:["This illustrative technology story looks at why AI literacy is becoming a topic of discussion in education. It focuses on understanding how automated tools work, checking outputs and protecting personal information.","The example suggests that students should learn to question AI-generated information rather than accept it automatically. Teachers and institutions may also need clear rules about appropriate use.","A real report should verify any school or university policy mentioned and include perspectives from educators, students, technology specialists and privacy experts."],
+      wh:{who:"Students, teachers and technology specialists (illustrative)",what:"AI literacy in education",when:"Fictional example dated 13 November 2026",where:"Classrooms and learning environments",why:"To build informed and responsible digital skills",how:"Through guidance, discussion and critical evaluation"},
+      background:"AI tools can generate text, images and other outputs, but they can also produce inaccurate information.",impact:"Digital literacy can influence learning, assessment and online safety.",facts:"No real policy or survey result is claimed.",quote:"No real quotation is included.",source:demoSource},
+      {id:6,cat:"sports",title:"Grassroots sports programmes focus on wider participation",deck:"A sample sports feature on access to coaching, facilities and community play.",img:"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1000&q=85",alt:"Athletes running on a track",date:"Sample story · 11 Nov 2026",time:"06:10 PM",location:"Illustrative sports ground",author:"Sports Desk",top:true,
+      paragraphs:["This sample sports feature explores how community programmes can encourage more young people to take part in organised sport.","The fictional programme described includes introductory coaching sessions and shared use of a neighbourhood ground. No real club, event or participant is being reported.","A real story should confirm who runs the programme, who can join, whether there are costs and what safeguarding arrangements are in place."],
+      wh:{who:"Young participants and community coaches (illustrative)",what:"A grassroots sports programme",when:"Fictional example dated 11 November 2026",where:"An illustrative community sports ground",why:"To widen access to sport",how:"Through coaching sessions and shared facilities"},
+      background:"Grassroots sport can provide opportunities for physical activity, teamwork and community participation.",impact:"Access to facilities and coaching can influence who gets to participate.",facts:"No real attendance or performance figures are included.",quote:"No real quotation is included.",source:demoSource},
+      {id:7,cat:"entertainment",title:"Independent filmmakers explore new ways to find audiences",deck:"A sample culture story on film festivals, streaming and community screenings.",img:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1000&q=85",alt:"Cinema seats and screen",date:"Sample story · 10 Nov 2026",time:"04:00 PM",location:"Film industry · illustrative",author:"Culture Desk",
+      paragraphs:["This fictional entertainment report looks at how independent filmmakers may reach audiences through festivals, online platforms and local screenings.","The story considers discoverability, promotion and the value of audience feedback. It does not refer to a real film release or named filmmaker.","A real article should verify release information, distribution agreements and festival selections, and should clearly label reviews as opinion."],
+      wh:{who:"Independent filmmakers and audiences (illustrative)",what:"Routes to reach viewers",when:"Fictional example dated 10 November 2026",where:"Film festivals and digital platforms",why:"To explore audience access",how:"Through screenings, distribution and promotion"},
+      background:"Independent films may use a mix of festival, theatrical and digital routes to reach viewers.",impact:"Distribution choices can shape visibility and access for creators and audiences.",facts:"No real release date or viewing figure is claimed.",quote:"No real quotation is included.",source:demoSource},
+      {id:8,cat:"education",title:"Student support services: what applicants should check",deck:"A practical sample guide to admissions information, deadlines and official notices.",img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1000&q=85",alt:"University students walking on campus",date:"Sample story · 13 Nov 2026",time:"11:00 AM",location:"India · illustrative",author:"Education Desk",
+      paragraphs:["This sample education guide explains how applicants can check admission information before making decisions. It recommends reading the latest official prospectus and checking eligibility, fees and deadlines.","Students should confirm whether a notice applies to their course, category and admission year. They should also use official university or examination-board websites for updates.","The example does not announce any real admission date, result or scholarship. Such details change and must be checked directly with the relevant institution."],
+      wh:{who:"Students, applicants and institutions",what:"Checking admissions and support information",when:"Fictional example dated 13 November 2026",where:"Indian education institutions",why:"To avoid missing important requirements",how:"By checking official notices and prospectuses"},
+      background:"Admission rules and schedules can vary by institution, programme and academic year.",impact:"Accurate information helps students and families plan applications.",facts:"No real deadline or eligibility rule is announced.",quote:"No real quotation is included.",source:{name:"University Grants Commission",url:"https://www.ugc.gov.in/"}},
+      {id:9,cat:"science",title:"Research communication: making scientific findings understandable",deck:"A sample science feature on explaining evidence, uncertainty and peer review.",img:"https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1000&q=85",alt:"Scientist working in a laboratory",date:"Sample story · 09 Nov 2026",time:"01:30 PM",location:"Research sector · illustrative",author:"Science Desk",
+      paragraphs:["This sample science feature looks at the role of clear communication when research findings reach the public. It explains why methods, limitations and peer review matter.","A responsible science report should distinguish early findings from established evidence. It should avoid overstating what a small study can prove and should identify whether a paper has been peer reviewed.","For a real story, reporters should read the original research, check the study design and seek independent expert comment where appropriate."],
+      wh:{who:"Researchers, journalists and readers",what:"Clear communication of research",when:"Fictional example dated 9 November 2026",where:"Research and public information spaces",why:"To help audiences assess evidence",how:"By explaining methods, limits and review status"},
+      background:"Scientific findings are developed through methods that vary by discipline and study type.",impact:"Clear explanations help readers understand what research does and does not show.",facts:"No scientific discovery or study result is claimed.",quote:"No real quotation is included.",source:{name:"Nature",url:"https://www.nature.com/"}},
+      {id:10,cat:"environment",title:"Urban green spaces bring climate and community questions together",deck:"A sample environment report looks at shade, biodiversity and access to parks.",img:"https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1000&q=85",alt:"Sunlight filtering through green trees",date:"Sample story · 08 Nov 2026",time:"09:10 AM",location:"Urban environment · illustrative",author:"Environment Desk",
+      paragraphs:["This illustrative environment story examines the many roles that urban green spaces can play, including shade, recreation and habitat for wildlife.","It also asks who can access parks and how they are maintained. A real report would check local land-use records, park budgets, tree surveys and residents' experiences.","Environmental coverage should explain the evidence behind claims and avoid attributing a single weather event to climate change without scientific support."],
+      wh:{who:"Residents, urban planners and environmental groups",what:"Access to and care of green spaces",when:"Fictional example dated 8 November 2026",where:"An illustrative urban neighbourhood",why:"For climate resilience and public wellbeing",how:"Through planning, maintenance and community input"},
+      background:"Urban green spaces can support biodiversity and improve the experience of public places.",impact:"Park access and maintenance can affect residents' daily lives.",facts:"No local park statistic or official project is claimed.",quote:"No real quotation is included.",source:{name:"UN Environment Programme",url:"https://www.unep.org/"}},
+      {id:11,cat:"delhi",title:"Neighbourhood transport access remains a key urban planning question",deck:"A sample Delhi-focused civic story about last-mile links and commuter experience.",img:"https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1000&q=85",alt:"India Gate in New Delhi",date:"Sample story · 13 Nov 2026",time:"07:50 AM",location:"Delhi · illustrative",author:"Delhi Desk",
+      paragraphs:["This fictional Delhi civic report looks at the challenge of connecting neighbourhoods with major public transport services. It focuses on walking routes, bus connections and safe access to stations.","The sample story does not claim that a specific road, route or transport project has changed. A real report should verify the location, speak to commuters and consult official transport information.","Good local reporting should include the experiences of people with different mobility needs, including older residents and people with disabilities."],
+      wh:{who:"Commuters, residents and transport planners",what:"Last-mile public transport access",when:"Fictional example dated 13 November 2026",where:"An illustrative Delhi neighbourhood",why:"To understand daily travel barriers",how:"Through route connections, walking access and planning"},
+      background:"Last-mile connectivity describes the journey between a transport stop and a person's actual destination.",impact:"Access can influence travel time, safety and the usability of public transport.",facts:"No real route update or commuter survey is stated.",quote:"No real quotation is included.",source:{name:"Delhi Transport Department",url:"https://transport.delhi.gov.in/"}},
+      {id:12,cat:"national",title:"Public information campaigns underline the value of clear communication",deck:"A sample report on accessible language, trusted channels and public awareness.",img:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85",alt:"People collaborating around a table",date:"Sample story · 07 Nov 2026",time:"12:20 PM",location:"India · illustrative",author:"National Desk",
+      paragraphs:["This fictional report explores how public information campaigns can reach people through clear language and accessible formats.","The sample focuses on communication choices such as local-language material, public notices and community outreach. It does not describe a real government campaign.","A real report should identify the issuing authority, verify the campaign's purpose and check whether information is available to people with disabilities."],
+      wh:{who:"Public agencies and residents (illustrative)",what:"Public information outreach",when:"Fictional example dated 7 November 2026",where:"Illustrative Indian communities",why:"To make important information easier to understand",how:"Through accessible formats and trusted channels"},
+      background:"Public communication is most useful when audiences can understand and act on the information.",impact:"Clear communication can support informed public decisions.",facts:"No real campaign outcome is claimed.",quote:"No real quotation is included.",source:demoSource},
+      {id:13,cat:"international",title:"Humanitarian reporting requires context as well as urgency",deck:"A sample media-literacy feature on verification, sourcing and responsible language.",img:"https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=1000&q=85",alt:"Aid supplies arranged for distribution",date:"Sample story · 06 Nov 2026",time:"03:25 PM",location:"Global reporting · illustrative",author:"International Desk",
+      paragraphs:["This sample media-literacy feature explains why humanitarian stories need careful verification, context and respectful language.","Images and eyewitness accounts can be important, but they should be checked for date, location and context. Reporters should also consider the safety and dignity of people shown.","A real report should corroborate casualty figures, displacement estimates and official claims with reliable sources, while clearly noting uncertainty."],
+      wh:{who:"Journalists, aid organisations and affected communities",what:"Responsible humanitarian reporting",when:"Fictional example dated 6 November 2026",where:"International news coverage",why:"To inform audiences without amplifying misinformation",how:"Through corroboration, context and ethical reporting"},
+      background:"Humanitarian situations can change quickly and information may be incomplete.",impact:"Accurate reporting helps audiences understand needs and response efforts.",facts:"No specific crisis or casualty figure is reported.",quote:"No real quotation is included.",source:demoSource},
+      {id:14,cat:"politics",title:"How to read a policy announcement: proposal, approval and implementation",deck:"A sample explainer clarifying the stages behind a government announcement.",img:"https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1000&q=85",alt:"Documents and books on a desk",date:"Sample story · 05 Nov 2026",time:"10:05 AM",location:"India · explainer",author:"Politics Desk",
+      paragraphs:["A policy announcement may describe an idea, a proposal, an approved decision or a programme already being implemented. These stages are not interchangeable.","This explainer recommends checking the original order, notification or official statement. It also encourages reporters to ask which department is responsible and when the public can expect action.","Readers should look for eligibility rules, funding details, implementation timelines and accountability mechanisms before drawing conclusions."],
+      wh:{who:"Government departments and people affected by a policy",what:"Understanding policy stages",when:"Evergreen explainer · sample page",where:"India",why:"To distinguish announcements from action",how:"By checking official documents and implementation details"},
+      background:"Policy processes can involve consultation, approval, funding and implementation stages.",impact:"Understanding the stages helps citizens assess what has actually changed.",facts:"This is a general explainer, not a report of a new policy.",quote:"No real quotation is included.",source:{name:"Press Information Bureau",url:"https://pib.gov.in/"}},
+      {id:15,cat:"business",title:"Financial headlines need context beyond a single market number",deck:"A sample business explainer on indices, time periods and investor caution.",img:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1000&q=85",alt:"Financial market chart on a screen",date:"Sample story · 04 Nov 2026",time:"01:45 PM",location:"Markets · explainer",author:"Business Desk",
+      paragraphs:["Market headlines often focus on a single index movement, but readers need context to understand what the number represents.","A useful report identifies the index, the comparison period and the factors cited by market participants. It should distinguish observed movements from explanations or predictions.","This educational sample is not investment advice and does not report any current market level."],
+      wh:{who:"Investors, companies and market participants",what:"Reading market information responsibly",when:"Evergreen explainer · sample page",where:"Financial markets",why:"To put market movements in context",how:"By checking index definitions, dates and multiple sources"},
+      background:"Market indices represent selected groups of securities and do not describe every company or investor's experience.",impact:"Context can help readers avoid overinterpreting a short-term movement.",facts:"No live prices or returns are provided.",quote:"No real quotation is included.",source:{name:"Securities and Exchange Board of India",url:"https://www.sebi.gov.in/"}},
+      {id:16,cat:"technology",title:"Digital privacy starts with understanding what an app collects",deck:"A sample consumer-technology guide to permissions, data and privacy settings.",img:"https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=85",alt:"Person using a smartphone and laptop",date:"Sample story · 03 Nov 2026",time:"09:00 AM",location:"Digital life · explainer",author:"Technology Desk",
+      paragraphs:["Apps may request access to information or device features to provide particular services. Users can review permissions and privacy information before deciding what to share.","This sample guide recommends checking the developer, reading the privacy notice and reviewing settings periodically. The exact controls vary by device and operating system.","A real report about a data incident should rely on confirmed notices, technical evidence and responses from the organisation involved."],
+      wh:{who:"App users and service providers",what:"Understanding app permissions",when:"Evergreen explainer · sample page",where:"Mobile and digital platforms",why:"To make informed privacy choices",how:"By reviewing permissions and privacy notices"},
+      background:"Personal data can include information that identifies or relates to an individual.",impact:"Privacy choices can affect how personal information is accessed and used.",facts:"No specific app or data breach is alleged.",quote:"No real quotation is included.",source:{name:"CERT-In",url:"https://www.cert-in.org.in/"}},
+      {id:17,cat:"sports",title:"Understanding sports coverage: results, records and verified statistics",deck:"A sample sports desk guide to match reports and reliable score information.",img:"https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1000&q=85",alt:"Football on a sports field",date:"Sample story · 02 Nov 2026",time:"05:35 PM",location:"Sports reporting · explainer",author:"Sports Desk",
+      paragraphs:["A strong match report tells readers what happened, why the result matters and which moments shaped the contest.","Scores, player statistics and tournament standings should be checked against the organiser or recognised governing body. Reporters should confirm the competition format and date.","This sample does not report a real fixture or result. It demonstrates how to build a sports story without inventing performance details."],
+      wh:{who:"Teams, players and match officials",what:"Verifying sports results and statistics",when:"Evergreen explainer · sample page",where:"Sports competitions",why:"To ensure accurate match reporting",how:"By checking official scorecards and competition records"},
+      background:"Sports data can differ across formats and competitions.",impact:"Accurate details help audiences follow results and understand performance.",facts:"No match score or record is claimed.",quote:"No real quotation is included.",source:{name:"International Olympic Committee",url:"https://olympics.com/ioc"}},
+      {id:18,cat:"entertainment",title:"How entertainment journalists verify release and casting news",deck:"A sample media guide on announcements, rumours and official confirmation.",img:"https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1000&q=85",alt:"Film camera in a studio",date:"Sample story · 01 Nov 2026",time:"02:50 PM",location:"Entertainment industry · explainer",author:"Culture Desk",
+      paragraphs:["Entertainment news moves quickly, especially on social media. A rumour, an industry report and an official announcement are different kinds of information.","Reporters should check statements from production companies, distributors or the people directly involved. Anonymous claims need careful handling and should not be presented as confirmed facts.","This sample article does not announce a real casting decision or release date."],
+      wh:{who:"Artists, production teams and audiences",what:"Verifying entertainment announcements",when:"Evergreen explainer · sample page",where:"Film and television industry",why:"To distinguish confirmed news from rumours",how:"By checking primary announcements and reliable reporting"},
+      background:"Entertainment reporting includes news, interviews, reviews and commentary, which should be clearly distinguished.",impact:"Verification protects audiences and the people being reported on.",facts:"No real film or series update is claimed.",quote:"No real quotation is included.",source:demoSource},
+      {id:19,cat:"education",title:"A checklist for evaluating scholarship information online",deck:"A sample student guide to eligibility, deadlines and avoiding misleading notices.",img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1000&q=85",alt:"Student notes and stationery on a desk",date:"Sample story · 31 Oct 2026",time:"11:15 AM",location:"India · student guide",author:"Education Desk",
+      paragraphs:["Students looking for scholarships should confirm the organisation offering the award and read the full eligibility conditions.","A genuine notice should explain the application process, required documents and deadline. Students should be cautious of requests for unnecessary payments or sensitive information.","This is a general guide and does not announce a new scholarship. Applicants should verify details through the official provider."],
+      wh:{who:"Students and scholarship providers",what:"Evaluating scholarship notices",when:"Evergreen explainer · sample page",where:"Online scholarship information",why:"To identify accurate opportunities",how:"By checking official provider websites and written terms"},
+      background:"Scholarships may be offered by public agencies, educational institutions and private organisations.",impact:"Reliable information can help students make informed application decisions.",facts:"No award amount or deadline is stated.",quote:"No real quotation is included.",source:{name:"National Scholarship Portal",url:"https://scholarships.gov.in/"}},
+      {id:20,cat:"science",title:"Public health explainers should separate evidence from advice",deck:"A sample health journalism guide to expert sourcing and clear caveats.",img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=85",alt:"Healthcare professional reviewing information",date:"Sample story · 30 Oct 2026",time:"08:15 AM",location:"Health reporting · explainer",author:"Health & Science Desk",
+      paragraphs:["Health journalism can help readers understand research and public guidance, but it must be careful about uncertainty and individual differences.","Reporters should use recognised health authorities and qualified experts, link to original studies where possible and explain whether evidence is preliminary or well established.","This sample is not medical advice and does not describe a new treatment or health alert."],
+      wh:{who:"Health reporters, experts and readers",what:"Responsible health information",when:"Evergreen explainer · sample page",where:"Public health communication",why:"To reduce confusion and misinformation",how:"By checking evidence and consulting qualified sources"},
+      background:"Health evidence may change as further research becomes available.",impact:"Clear reporting can help people ask informed questions of qualified professionals.",facts:"No diagnosis, treatment claim or health statistic is provided.",quote:"No real quotation is included.",source:{name:"World Health Organization",url:"https://www.who.int/"}},
+      {id:21,cat:"environment",title:"Explaining air-quality information without losing local context",deck:"A sample environment explainer on monitoring stations, readings and public updates.",img:"https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1000&q=85",alt:"Trees and city atmosphere",date:"Sample story · 29 Oct 2026",time:"07:30 AM",location:"Urban environment · explainer",author:"Environment Desk",
+      paragraphs:["Air-quality information is most useful when readers know where a reading was recorded, when it was recorded and which measure is being reported.","A responsible report should identify the monitoring source and explain that conditions can vary across neighbourhoods and over time. It should not treat one station's reading as a complete picture of an entire city.","This sample does not provide a current air-quality reading or health advisory."],
+      wh:{who:"Residents, monitoring agencies and public authorities",what:"Understanding air-quality readings",when:"Evergreen explainer · sample page",where:"Urban monitoring locations",why:"To interpret environmental information accurately",how:"By checking station, timestamp and measurement details"},
+      background:"Air-quality monitoring uses defined measures and equipment, and readings need context.",impact:"Clear information can help the public understand environmental conditions.",facts:"No live pollution value is supplied.",quote:"No real quotation is included.",source:{name:"Central Pollution Control Board",url:"https://cpcb.nic.in/"}},
+      {id:22,cat:"delhi",title:"Civic issue reporting begins with location checks and resident voices",deck:"A sample local journalism guide to documenting neighbourhood concerns fairly.",img:"https://images.unsplash.com/photo-1567157577867-05ccb1388e66?auto=format&fit=crop&w=1000&q=85",alt:"Busy urban street",date:"Sample story · 28 Oct 2026",time:"04:45 PM",location:"Delhi · local reporting guide",author:"Delhi Desk",
+      paragraphs:["Local reporting often begins with a concern raised by residents. Before publication, journalists should confirm the exact location and understand whether the issue is isolated or part of a wider pattern.","A fair report seeks responses from the responsible civic agency and gives people named in the story a reasonable opportunity to comment.","This sample does not allege a real civic failure. It demonstrates how to document a local issue with evidence, context and accountability."],
+      wh:{who:"Residents, civic officials and local reporters",what:"Documenting a neighbourhood concern",when:"Evergreen explainer · sample page",where:"Delhi neighbourhoods",why:"To report local issues accurately",how:"Through site visits, records and responses"},
+      background:"Local public-service reporting can connect residents with information about civic responsibilities.",impact:"Accurate coverage can support informed discussion and accountability.",facts:"No specific complaint or agency response is claimed.",quote:"No real quotation is included.",source:{name:"Municipal Corporation of Delhi",url:"https://mcdonline.nic.in/"}}
+    ];
+
+    const getCategory = id => categories.find(c => c.id === id)?.name || "News";
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+    const imageFallback = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1000&q=80";
+
+    function card(article){
+      return `<article class="news-card">
+        <div class="card-image"><img src="${esc(article.img)}" alt="${esc(article.alt)}" loading="lazy" onerror="this.onerror=null;this.src='${imageFallback}'"></div>
+        <div class="card-body"><span class="tag">${esc(getCategory(article.cat))}</span>
+          <h3>${esc(article.title)}</h3><p>${esc(article.deck)}</p>
+          <div class="meta"><span>${esc(article.date)}</span><span>${esc(article.time)}</span></div>
+          <div class="card-actions"><button class="btn" onclick="openArticle(${article.id})">Read More</button><span class="meta">Sample</span></div>
+        </div>
+      </article>`;
+    }
+
+    function renderHome(){
+      const featured = articles.find(a=>a.featured) || articles[0];
+      const side = articles.filter(a=>a.id!==featured.id).slice(0,2);
+      document.getElementById("heroGrid").innerHTML = `
+        <article class="hero-main">
+          <img src="${esc(featured.img)}" alt="${esc(featured.alt)}" onerror="this.onerror=null;this.src='${imageFallback}'">
+          <div class="hero-overlay"><span class="tag">${esc(getCategory(featured.cat))} · SAMPLE</span>
+            <h1>${esc(featured.title)}</h1><p>${esc(featured.deck)}</p>
+            <div class="meta">${esc(featured.date)} · ${esc(featured.time)}</div>
+            <button class="read-link" onclick="openArticle(${featured.id})">READ FULL STORY →</button>
+          </div>
+        </article>
+        <div class="hero-side">${side.map(a=>`<article class="hero-side-card">
+          <img src="${esc(a.img)}" alt="${esc(a.alt)}" onerror="this.onerror=null;this.src='${imageFallback}'">
+          <div class="hero-overlay"><span class="tag">${esc(getCategory(a.cat))}</span><h3>${esc(a.title)}</h3>
+          <button class="read-link" onclick="openArticle(${a.id})">READ STORY →</button></div></article>`).join("")}</div>`;
+      document.getElementById("topGrid").innerHTML = articles.filter(a=>a.top).slice(0,4).map(card).join("");
+      document.getElementById("latestGrid").innerHTML = articles.slice(0,6).map(card).join("");
+      document.getElementById("trendingList").innerHTML = articles.slice(6,10).map((a,i)=>`<div class="rank-item"><span class="rank">0${i+1}</span><div><strong><a href="#" onclick="openArticle(${a.id});return false">${esc(a.title)}</a></strong><small>${esc(getCategory(a.cat))} · Sample</small></div></div>`).join("");
+      document.getElementById("editorsList").innerHTML = articles.slice(10,14).map((a,i)=>`<div class="rank-item"><span class="rank">✦</span><div><strong><a href="#" onclick="openArticle(${a.id});return false">${esc(a.title)}</a></strong><small>${esc(getCategory(a.cat))}</small></div></div>`).join("");
+      document.getElementById("categorySections").innerHTML = categories.map(cat=>{
+        const items=articles.filter(a=>a.cat===cat.id);
+        return `<section class="section category-section" id="${cat.id}">
+          <div class="section-head"><h2>${esc(cat.name)}</h2><small>${items.length} sample ${items.length===1?"story":"stories"}</small></div>
+          <div class="card-grid">${items.map(card).join("")}</div>
+        </section>`;
+      }).join("");
+    }
+
+    function openArticle(id){
+      const a=articles.find(x=>x.id===Number(id)); if(!a)return;
+      document.querySelector("main").classList.add("hidden");
+      document.getElementById("articleView").style.display="block";
+      document.getElementById("articleContent").innerHTML=`
+        <button class="btn btn-outline article-back" onclick="backHome()">← Back to Homepage</button>
+        <div class="eyebrow">${esc(getCategory(a.cat))} / SAMPLE ARTICLE</div>
+        <h1 class="article-title">${esc(a.title)}</h1>
+        <p class="article-deck">${esc(a.deck)}</p>
+        <div class="meta"><span>By ${esc(a.author)}</span><span>${esc(a.date)}</span><span>${esc(a.time)}</span><span>${esc(a.location)}</span></div>
+        <img class="article-hero" src="${esc(a.img)}" alt="${esc(a.alt)}" onerror="this.onerror=null;this.src='${imageFallback}'">
+        <div class="image-credit">Illustrative image · Replace with a verified, properly credited image for publication.</div>
+        <div class="demo-note"><strong>Sample article:</strong> This is illustrative demo copy, not a verified news report. Confirm all facts, dates, names, figures and statements before publishing.</div>
+        <div class="article-content">${a.paragraphs.map(p=>`<p>${esc(p)}</p>`).join("")}</div>
+        <div class="info-panel"><h3>5W1H News Analysis</h3><dl>
+          <dt>Who</dt><dd>${esc(a.wh.who)}</dd><dt>What</dt><dd>${esc(a.wh.what)}</dd>
+          <dt>When</dt><dd>${esc(a.wh.when)}</dd><dt>Where</dt><dd>${esc(a.wh.where)}</dd>
+          <dt>Why</dt><dd>${esc(a.wh.why)}</dd><dt>How</dt><dd>${esc(a.wh.how)}</dd>
+        </dl></div>
+        <div class="info-panel"><h3>Background & Context</h3><p>${esc(a.background)}</p>
+          <h3>Public Impact</h3><p>${esc(a.impact)}</p>
+          <h3>Facts & Figures</h3><p>${esc(a.facts)}</p>
+          <h3>Statements</h3><p>${esc(a.quote)}</p></div>
+        <div class="source-box"><strong>Source / verification:</strong> ${esc(a.source.name)}. This sample story has not been independently verified.
+          <br><a href="${esc(a.source.url)}" target="_blank" rel="noopener noreferrer">Visit source website ↗</a>
+          <p><strong>Reporter’s note:</strong> For a real report, link directly to the original article, official release or primary document—not just a publisher's homepage.</p>
+        </div>
+        <h2 style="font-family:Georgia,serif;color:var(--navy);margin-top:30px">Related Stories</h2>
+        <div class="related-grid">${articles.filter(x=>x.cat===a.cat&&x.id!==a.id).slice(0,3).map(x=>`<div class="related-item" onclick="openArticle(${x.id})">${esc(x.title)}<div class="meta">Read sample story →</div></div>`).join("") || "<p>No related sample stories available.</p>"}</div>`;
+      window.scrollTo({top:0,behavior:"smooth"});
+      history.replaceState(null,"",`#article-${a.id}`);
+    }
+
+    function backHome(){
+      document.getElementById("articleView").style.display="none";
+      document.querySelector("main").classList.remove("hidden");
+      document.getElementById("searchResults").classList.add("hidden");
+      history.replaceState(null,"", "#home");
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    function searchNews(query){
+      const q=query.trim().toLowerCase();
+      const results=articles.filter(a=>(a.title+" "+a.deck+" "+getCategory(a.cat)+" "+a.paragraphs.join(" ")).toLowerCase().includes(q));
+      document.querySelector("main").classList.remove("hidden");
+      document.getElementById("articleView").style.display="none";
+      document.getElementById("searchResults").classList.remove("hidden");
+      document.getElementById("searchHeading").textContent=q?`Search Results for “${query.trim()}”`:"Search Results";
+      document.getElementById("searchGrid").innerHTML=results.length?results.map(card).join(""):`<div class="empty-state">No news found. Try another keyword.</div>`;
+      document.getElementById("searchResults").scrollIntoView({behavior:"smooth"});
+    }
+
+    document.getElementById("searchForm").addEventListener("submit",e=>{
+      e.preventDefault(); const q=document.getElementById("searchInput").value;
+      if(q.trim())searchNews(q); else document.getElementById("searchInput").focus();
+    });
+    document.getElementById("clearSearch").addEventListener("click",()=>{
+      document.getElementById("searchInput").value="";
+      document.getElementById("searchResults").classList.add("hidden");
+      document.getElementById("latestNews").scrollIntoView({behavior:"smooth"});
+    });
+    document.getElementById("brandHome").addEventListener("click",e=>{e.preventDefault();backHome();});
+    document.querySelectorAll(".nav a").forEach(link=>link.addEventListener("click",()=>{
+      document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));
+      link.classList.add("active");
+      document.getElementById("articleView").style.display="none";
+      document.querySelector("main").classList.remove("hidden");
+    }));
+    document.querySelectorAll("[data-info]").forEach(link=>link.addEventListener("click",e=>{
+      e.preventDefault();alert(link.dataset.info+"\\n\\nThis is a student-project demo. Add your newsroom's verified policy and contact details here.");
+    }));
+
+    const now=new Date();
+    document.getElementById("todayDate").textContent=now.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    document.getElementById("year").textContent=now.getFullYear();
+    renderHome();
+  </script>
+</body>
+</html>
